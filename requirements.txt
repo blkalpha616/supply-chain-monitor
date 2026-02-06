@@ -1,0 +1,8 @@
+crewai
+langchain
+python-dotenv
+openai
+flask
+pandas
+statsmodels
+gunicorn
