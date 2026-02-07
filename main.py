@@ -14,7 +14,8 @@ def run_flask():
     app.run(host='0.0.0.0', port=port)
 
 # This runs the 'Fake Door' in the background so your AI can work
-threading.Thread(target=run_flask, daemon=True).start()import os
+threading.Thread(target=run_flask, daemon=True).start()
+import os
 from dotenv import load_dotenv
 from crewai import Agent, Task, Crew, Process
 from crewai_tools import SerperDevTool
