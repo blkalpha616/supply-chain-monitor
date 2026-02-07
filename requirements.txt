@@ -1,8 +1,8 @@
+crewai_tools
 crewai
-langchain
+langchain_community
 python-dotenv
 openai
 flask
 pandas
 statsmodels
-gunicorn
