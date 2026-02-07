@@ -1,4 +1,20 @@
+from flask import Flask
+import threading
 import os
+
+app = Flask(__name__)
+
+@app.route('/')
+def health_check():
+    return "AI Agent is Running", 200
+
+def run_flask():
+    # Render gives us a 'PORT' automatically. This finds it.
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
+
+# This runs the 'Fake Door' in the background so your AI can work
+threading.Thread(target=run_flask, daemon=True).start()import os
 from dotenv import load_dotenv
 from crewai import Agent, Task, Crew, Process
 from crewai_tools import SerperDevTool
