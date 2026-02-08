@@ -1,10 +1,6 @@
-crewai_tools
-crewai
-langchain_community
-python-dotenv
-openai
-flask
-pandas
-statsmodels
+crewai==0.1.0
 langchain-openai
+langchain-community
+crewai-tools
+python-dotenv
 sendgrid
