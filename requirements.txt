@@ -6,3 +6,4 @@ openai
 flask
 pandas
 statsmodels
+langchain-openai
