@@ -7,3 +7,4 @@ flask
 pandas
 statsmodels
 langchain-openai
+sendgrid
