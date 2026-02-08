@@ -3,4 +3,4 @@ langchain-openai
 langchain-community
 crewai-tools
 python-dotenv
-sendgrid
+resend
