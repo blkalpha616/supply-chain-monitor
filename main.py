@@ -1,5 +1,4 @@
 import os
-import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from crewai import Agent, Task, Crew, Process
@@ -20,20 +19,13 @@ def send_commercial_report(content):
         html_content=f'<strong>Product Ready:</strong><br><pre>{content}</pre>'
     )
     try:
+        # This uses your new SendGrid Key from Render Environment
         sg = SendGridAPIClient(os.getenv('SENDGRID_API_KEY'))
         response = sg.send(message)
         print(f"✅ Web-Door Success: Status {response.status_code}")
     except Exception as e:
         print(f"❌ Web-Door Failed: {e}")
 
-# 3. THE CREW: YOUR DIGITAL EMPLOYEES
-market_analyst = Agent(
-    role='Lead Market Researcher',
-    goal='Identify high-demand, low-competition digital niches.',
-    backstory="Expert at spotting trends before they go viral. You find the 'Gold Mines'.",
-    tools=[search_tool],
-    llm=llm,
-    verbose=True
 )
 
 product_architect = Agent(
