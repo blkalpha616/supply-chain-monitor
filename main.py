@@ -1,32 +1,39 @@
 import os
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+import resend
+from flask import Flask
 from crewai import Agent, Task, Crew, Process
 from langchain_openai import ChatOpenAI
 from crewai_tools import SerperDevTool, FileReadTool
 
-# 1. POWERHOUSE CONFIGURATION (The "Brain")
-# We use GPT-4o for commercial-grade reasoning that customers will pay for.
+# 1. POWERHOUSE CONFIGURATION
 llm = ChatOpenAI(model="gpt-4o", temperature=0.7)
 search_tool = SerperDevTool()
 
-# 2. AUTOMATED EMAIL SYSTEM (The "Delivery Man")
-def send_commercial_report(content):
-    message = Mail(
-        from_email='blkalpha616@gmail.com',
-        to_emails='blkalpha616@gmail.com',
-        subject='🚀 NEW DIGITAL PRODUCT READY FOR SALE',
-        html_content=f'<strong>Product Ready:</strong><br><pre>{content}</pre>'
-    )
-    try:
-        # This uses your new SendGrid Key from Render Environment
-        sg = SendGridAPIClient(os.getenv('SENDGRID_API_KEY'))
-        response = sg.send(message)
-        print(f"✅ Web-Door Success: Status {response.status_code}")
-    except Exception as e:
-        print(f"❌ Web-Door Failed: {e}")
+# 2. AUTOMATED EMAIL SYSTEM (The "Delivery Man" via Resend)
+resend.api_key = os.getenv('RESEND_API_KEY')
 
-)
+def send_commercial_report(content):
+    try:
+        params = {
+            "from": "onboarding@resend.dev",
+            "to": "blkalpha616@gmail.com",
+            "subject": "🚀 NEW DIGITAL PRODUCT READY FOR SALE",
+            "html": f"<strong>Product Ready:</strong><br><pre>{content}</pre>",
+        }
+        resend.Emails.send(params)
+        print("✅ Success: Email sent via Resend!")
+    except Exception as e:
+        print(f"❌ Failed: {e}")
+
+# 3. WEB SERVER FOR RENDER (Prevents the "Endless Circle" of Errors)
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Email Bot is Active and Running"
+
+# --- YOUR AGENTS START BELOW THIS LINE ---
+
 
 product_architect = Agent(
     role='Digital Product Specialist',
