@@ -13,25 +13,18 @@ search_tool = SerperDevTool()
 
 # 2. AUTOMATED EMAIL SYSTEM (The "Delivery Man")
 def send_commercial_report(content):
-    sender_email = "blkalpha616@gmail.com"
-    receiver_email = "blkalpha616@gmail.com"
-    # Pulls the secret 16-digit key from your Render Environment
-    password = os.getenv('EMAIL_PASSWORD') 
-
-    msg = MIMEText(content, 'markdown')
-    msg['Subject'] = '🚀 NEW DIGITAL PRODUCT READY FOR SALE'
-    msg['From'] = sender_email
-    msg['To'] = receiver_email
-
+    message = Mail(
+        from_email='blkalpha616@gmail.com',
+        to_emails='blkalpha616@gmail.com',
+        subject='🚀 NEW DIGITAL PRODUCT READY FOR SALE',
+        html_content=f'<strong>Product Ready:</strong><br><pre>{content}</pre>'
+    )
     try:
-        with smtplib.SMTP('smtp.gmail.com', 587) as server:
-    server.starttls() # This "unlocks" the connection
-    server.login(sender_email, password)
-    server.sendmail(sender_email, receiver_email, msg.as_string())
-            server.sendmail(sender_email, receiver_email, msg.as_string())
-        print("✅ Success: Product delivered to your inbox.")
+        sg = SendGridAPIClient(os.getenv('SENDGRID_API_KEY'))
+        response = sg.send(message)
+        print(f"✅ Web-Door Success: Status {response.status_code}")
     except Exception as e:
-        print(f"❌ Delivery Failed: {e}")
+        print(f"❌ Web-Door Failed: {e}")
 
 # 3. THE CREW: YOUR DIGITAL EMPLOYEES
 market_analyst = Agent(
