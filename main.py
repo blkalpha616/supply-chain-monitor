@@ -1,3 +1,32 @@
+import os
+import smtplib
+from email.mime.text import MIMEText
+from dotenv import load_dotenv
+
+# Load variables (needed if you run this locally, Render does this automatically)
+load_dotenv()
+
+# Your email configuration
+sender_email = "blkalpha616@gmail.com"
+sender_password = os.getenv('EMAIL_PASSWORD') # This pulls your 16-digit key from Render
+receiver_email = "blkalpha616@gmail.com"
+
+def send_report(report_content):
+    """Function to send the AI agents' work to your email."""
+    try:
+        msg = MIMEText(report_content)
+        msg['Subject'] = 'Daily AI Agent Report - Digital Property'
+        msg['From'] = sender_email
+        msg['To'] = receiver_email
+
+        # Connecting to Google's secure mail server
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+            server.login(sender_email, sender_password)
+            server.sendmail(sender_email, receiver_email, msg.as_string())
+        
+        print("Success! The report has been sent to your email.")
+    except Exception as e:
+        print(f"Error sending email: {e}")
 from flask import Flask
 import threading
 import os
