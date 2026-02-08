@@ -57,6 +57,7 @@ creation_task = Task(
 )
 
 # 5. EXECUTION LOOP
+# 5. EXECUTION LOOP
 if __name__ == "__main__":
     print("🤖 AI Crew is starting their 10-hour shift for you...")
     
@@ -65,10 +66,23 @@ if __name__ == "__main__":
         tasks=[research_task, creation_task],
         process=Process.sequential
     )
-
+    
     final_result = my_crew.kickoff()
-
-    # The Final Hand-off: Send the product to your email automatically
+    
+    # Send the email once
     send_commercial_report(str(final_result))
     
-    print("🏁 Work complete. Check your email for your new digital asset.")
+    print("🏁 Work complete. Check your email!")
+
+    # --- ADD THIS PART TO KEEP RENDER HAPPY ---
+    from flask import Flask
+    import os
+    
+    app = Flask(__name__)
+    
+    @app.route('/')
+    def health_check():
+        return "CrewAI Bot is Live!"
+
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
