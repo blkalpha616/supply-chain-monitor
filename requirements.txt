@@ -1,6 +1,7 @@
-crewai==0.1.0
-langchain-openai
-langchain-community
-crewai-tools
-python-dotenv
+flask
 resend
+gunicorn
+crewai
+crewai-tools
+langchain-openai
+python-dotenv
