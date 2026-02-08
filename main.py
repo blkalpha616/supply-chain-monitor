@@ -9,7 +9,7 @@ from crewai_tools import SerperDevTool, FileReadTool
 llm = ChatOpenAI(model="gpt-4o", temperature=0.7)
 search_tool = SerperDevTool()
 
-# 2. AUTOMATED EMAIL SYSTEM (The "Delivery Man" via Resend)
+# 2. AUTOMATED EMAIL SYSTEM
 resend.api_key = os.getenv('RESEND_API_KEY')
 
 def send_commercial_report(content):
@@ -25,20 +25,22 @@ def send_commercial_report(content):
     except Exception as e:
         print(f"❌ Failed: {e}")
 
-# 3. WEB SERVER FOR RENDER (Prevents the "Endless Circle" of Errors)
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return "Email Bot is Active and Running"
-
-# --- YOUR AGENTS START BELOW THIS LINE ---
-
+# 3. DEFINE YOUR AGENTS (Must come before Tasks!)
+market_analyst = Agent(
+    role='Market Research Analyst',
+    goal='Find the most profitable niches for digital products in 2026',
+    backstory='You are an expert at spotting trends before they go viral.',
+    llm=llm,
+    verbose=True,
+    allow_delegation=False,
+    tools=[search_tool]
+)
 
 product_architect = Agent(
     role='Digital Product Specialist',
+    role_description='Digital Product Specialist',
     goal='Design a high-ticket digital asset (PDF, Course, or Tool) based on research.',
-    backstory="You turn raw data into something people want to buy for $100+.",
+    backstory='You turn raw data into something people want to buy for $100+.',
     llm=llm,
     verbose=True
 )
@@ -56,10 +58,9 @@ creation_task = Task(
     agent=product_architect
 )
 
-# 5. EXECUTION LOOP
-# 5. EXECUTION LOOP
+# 5. EXECUTION LOOP & WEB SERVER
 if __name__ == "__main__":
-    print("🤖 AI Crew is starting their 10-hour shift for you...")
+    print("🤖 AI Crew is starting their work...")
     
     my_crew = Crew(
         agents=[market_analyst, product_architect],
@@ -69,20 +70,17 @@ if __name__ == "__main__":
     
     final_result = my_crew.kickoff()
     
-    # Send the email once
+    # Send the email once the AI finishes
     send_commercial_report(str(final_result))
     
     print("🏁 Work complete. Check your email!")
 
-    # --- ADD THIS PART TO KEEP RENDER HAPPY ---
-    from flask import Flask
-    import os
-    
+    # --- KEEP RENDER HAPPY ---
     app = Flask(__name__)
     
     @app.route('/')
     def health_check():
-        return "CrewAI Bot is Live!"
+        return "CrewAI Bot is Active and Running"
 
     port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)
