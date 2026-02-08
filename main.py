@@ -1,6 +1,7 @@
 import os
-import smtplib
-from email.mime.text import MIMEText
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 from crewai import Agent, Task, Crew, Process
 from langchain_openai import ChatOpenAI
 from crewai_tools import SerperDevTool, FileReadTool
