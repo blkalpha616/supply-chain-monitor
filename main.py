@@ -23,8 +23,10 @@ def send_commercial_report(content):
     msg['To'] = receiver_email
 
     try:
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-            server.login(sender_email, password)
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+    server.starttls() # This "unlocks" the connection
+    server.login(sender_email, password)
+    server.sendmail(sender_email, receiver_email, msg.as_string())
             server.sendmail(sender_email, receiver_email, msg.as_string())
         print("✅ Success: Product delivered to your inbox.")
     except Exception as e:
